@@ -1,0 +1,28 @@
+:root {
+  /* For light mode */
+  --primary-color: #1c3148;
+  --primary-light-color: #26415d;
+  --primary-hover-color: #4978ab;
+  --secondary-color: #c56715;
+  --secondary-light-color: #d27321;
+  --secondary-hover-color: #e48633;
+  --background-color: #ffffff;
+  --text-dark-color: #212529;
+  --text-light-color: #eeeeee;
+}
+
+body {
+  width: 100vw;
+  height: 100dvh;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
