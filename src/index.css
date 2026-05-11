@@ -1,5 +1,4 @@
 :root {
-  /* For light mode */
   --primary-color: #1c3148;
   --primary-light-color: #26415d;
   --primary-hover-color: #4978ab;
@@ -14,6 +13,7 @@
 body {
   width: 100vw;
   height: 100dvh;
+  font-family: system-ui;
 }
 
 #root {
@@ -25,4 +25,19 @@ body {
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
+  font-size: 62.5%;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
