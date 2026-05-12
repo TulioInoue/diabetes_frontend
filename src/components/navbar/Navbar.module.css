@@ -9,7 +9,6 @@
   gap: 2rem;
   z-index: 2;
   box-shadow: 5px 0px 5px gray;
-  overflow-y: auto;
 }
 
 .main__navbar_header {
@@ -94,7 +93,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
 }
 
 #main__content__background {
@@ -157,6 +156,7 @@
     width: 250px;
     animation: showIn 0.25s ease-in-out;
     display: grid;
+    grid-template-rows: min-content 1fr min-content;
   }
   #main__content__button {
     font-size: 2rem;

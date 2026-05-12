@@ -41,8 +41,6 @@ export default function NavBar() {
         </div>
         <div className={style.main__navbar_body}>
           <NavbarLink path="/model" pathName="model" />
-          <NavbarLink path="/about" pathName="about" />
-          <NavbarLink path="/cleaning" pathName="cleaning" />
           <NavbarLink path="/training" pathName="training" />
         </div>
         <div className={style.main__navbar_tail}>
