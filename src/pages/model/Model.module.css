@@ -10,6 +10,10 @@
   font-size: clamp(6rem, 5vw, 7rem);
 }
 
+.model__header p {
+  font-size: clamp(1rem, 5vw, 1.5rem);
+}
+
 .form {
   display: flex;
   flex-direction: column;

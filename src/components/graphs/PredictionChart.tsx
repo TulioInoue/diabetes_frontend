@@ -54,8 +54,8 @@ export default function PredictionChart({ diabetes, no_diabetes }: ChartProps) {
           show: false,
         },
         data: [
-          { value: diabetes, name: "Diabetes Risk" },
-          { value: no_diabetes, name: "Negative" },
+          { value: diabetes, name: "Diabetes risk" },
+          { value: no_diabetes, name: "Health" },
         ],
       },
     ],

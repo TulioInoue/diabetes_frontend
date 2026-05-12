@@ -2,10 +2,12 @@ import style from "./Model.module.css";
 
 import RadioInput from "../../components/radioInput/RadioInput";
 import PredictionChart from "../../components/graphs/PredictionChart";
+import Loading from "../../components/loading/Loading";
 
 import { useState } from "react";
 
 export default function Model() {
+  const [loading, setLoading] = useState<boolean>();
   const [predictionResult, setPredictionResult] = useState<{
     diabetes: number;
     no_diabetes: number;
@@ -15,6 +17,8 @@ export default function Model() {
     weight: "",
     height: "",
     gender: "Male",
+    polyuria: false,
+    polydipsia: false,
     sudden_weight_loss: false,
     weakness: false,
     polyphagia: false,
@@ -29,6 +33,14 @@ export default function Model() {
   });
 
   const questions: { text: string; target: keyof typeof form }[] = [
+    {
+      text: "Has experienced excessive or frequent urination?",
+      target: "polyuria",
+    },
+    {
+      text: "Has experienced excessive thirst or extreme fluid intake?",
+      target: "polydipsia",
+    },
     {
       text: "Occurrence of a rapid and unexpected decrease in body weight?",
       target: "sudden_weight_loss",
@@ -93,6 +105,7 @@ export default function Model() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setLoading(true);
 
     const payload = {
       ...form,
@@ -117,90 +130,105 @@ export default function Model() {
         diabetes: data.percentage,
         no_diabetes: 1 - data.percentage,
       });
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Erro ao conectar com a API:", error);
     }
   }
 
   return (
-    <section id={style.model}>
-      <div className={style.model__header}>
-        <h2>Submit your answer</h2>
-        <hr />
-      </div>
-      <form onSubmit={handleSubmit} className={style.form}>
-        <div className={style.model__inputs}>
-          <div className={style.model__input}>
-            <label htmlFor="age">Age:</label>
-            <input
-              required
-              type="number"
-              id="age"
-              onChange={(e) => handleOnChangeForm(e.currentTarget.value, "age")}
-            />
-          </div>
-          <div className={style.model__select}>
-            <label htmlFor="gender">Gender:</label>
-            <select
-              name="gender"
-              id="gender"
-              onChange={(e) =>
-                handleOnChangeForm(e.currentTarget.value, "gender")
-              }
-            >
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-          </div>
-          <div className={style.model__input}>
-            <label htmlFor="height">Height:</label>
-            <input
-              required
-              type="number"
-              id="height"
-              step="0.01"
-              onChange={(e) =>
-                handleOnChangeForm(e.currentTarget.value, "height")
-              }
-            />
-          </div>
-          <div className={style.model__input}>
-            <label htmlFor="height">Weight:</label>
-            <input
-              required
-              type="number"
-              id="weight"
-              step="0.01"
-              onChange={(e) =>
-                handleOnChangeForm(e.currentTarget.value, "weight")
-              }
-            />
-          </div>
+    <>
+      {loading && <Loading />}
+      <section id={style.model}>
+        <div className={style.model__header}>
+          <h2>Submit your answer</h2>
+          <p>
+            *This form is for demonstration purposes only and should not be
+            taken seriously. The diagnosis cannot replace the opinion of a
+            medical professional.
+          </p>
+          <hr />
         </div>
-        {questions.map((question, key) => (
-          <RadioInput
-            key={key}
-            text={question.text}
-            options={[
-              { name: "Yes", value: "true", anchor: question.target },
-              { name: "No", value: "false", anchor: question.target },
-            ]}
-            onClickFunction={(e) =>
-              handleOnChangeForm(e.currentTarget.value, question.target)
-            }
-          />
-        ))}
+        <form onSubmit={handleSubmit} className={style.form}>
+          <div className={style.model__inputs}>
+            <div className={style.model__input}>
+              <label htmlFor="age">Age:</label>
+              <input
+                required
+                type="number"
+                id="age"
+                placeholder="0"
+                onChange={(e) =>
+                  handleOnChangeForm(e.currentTarget.value, "age")
+                }
+              />
+            </div>
+            <div className={style.model__select}>
+              <label htmlFor="gender">Gender:</label>
+              <select
+                name="gender"
+                id="gender"
+                onChange={(e) =>
+                  handleOnChangeForm(e.currentTarget.value, "gender")
+                }
+              >
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            <div className={style.model__input}>
+              <label htmlFor="height">Height (m):</label>
+              <input
+                required
+                type="number"
+                id="height"
+                step="0.01"
+                placeholder="0.00"
+                onChange={(e) =>
+                  handleOnChangeForm(e.currentTarget.value, "height")
+                }
+              />
+            </div>
+            <div className={style.model__input}>
+              <label htmlFor="height">Weight (kg):</label>
+              <input
+                required
+                type="number"
+                id="weight"
+                step="0.01"
+                placeholder="0.00"
+                onChange={(e) =>
+                  handleOnChangeForm(e.currentTarget.value, "weight")
+                }
+              />
+            </div>
+          </div>
+          {questions.map((question, key) => (
+            <RadioInput
+              key={key}
+              text={question.text}
+              options={[
+                { name: "Yes", value: "true", anchor: question.target },
+                { name: "No", value: "false", anchor: question.target },
+              ]}
+              onClickFunction={(e) =>
+                handleOnChangeForm(e.currentTarget.value, question.target)
+              }
+            />
+          ))}
 
-        <button type="submit" className={style.model__button}>
-          Check
-        </button>
-      </form>
-      {predictionResult && (
-        <PredictionChart
-          diabetes={predictionResult.diabetes}
-          no_diabetes={predictionResult.no_diabetes}
-        />
-      )}
-    </section>
+          <button type="submit" className={style.model__button}>
+            Check
+          </button>
+        </form>
+        {predictionResult && (
+          <PredictionChart
+            diabetes={predictionResult.diabetes}
+            no_diabetes={predictionResult.no_diabetes}
+          />
+        )}
+      </section>
+    </>
   );
 }
