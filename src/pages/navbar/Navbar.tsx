@@ -1,28 +1,9 @@
 import style from "./Navbar.module.css";
-import { Outlet, Link, useLocation } from "react-router";
+import { Outlet } from "react-router";
 import { useState } from "react";
 
-interface NavbarLinkInterface {
-  path: string;
-  pathName: string;
-}
-
-function NavbarLink({ path, pathName }: NavbarLinkInterface) {
-  const location = useLocation().pathname;
-  return (
-    <div
-      className={
-        location === path
-          ? style.main__navbar_selected
-          : style.main__navbar_unselected
-      }
-    >
-      <Link to={path}>
-        <h3>{pathName}</h3>
-      </Link>
-    </div>
-  );
-}
+import { navlinks, title } from "./navbar_links";
+import NavbarLink from "./navlink/navLink";
 
 export default function NavBar() {
   const [navbar, setNavbar] = useState<boolean>();
@@ -36,12 +17,16 @@ export default function NavBar() {
         }
       >
         <div className={style.main__navbar_header}>
-          <img src="icons/brain.svg" alt="" />
-          <h2>diabetes detection</h2>
+          <div>
+            <i className="fi fi-ss-book-brain" />
+            <h2>{title}</h2>
+          </div>
+          <hr />
         </div>
         <div className={style.main__navbar_body}>
-          <NavbarLink path="/model" pathName="model" />
-          <NavbarLink path="/training" pathName="training" />
+          {navlinks.map((link, key) => (
+            <NavbarLink key={key} {...link} />
+          ))}
         </div>
         <div className={style.main__navbar_tail}>
           <a href="https://github.com/TulioInoue" target="_blank">
