@@ -1,10 +1,11 @@
 import style from "./Model.module.css";
 
-import PredictionChart from "../../components/graphs/PredictionChart";
+import DonutChart from "../../components/graphs/Donut";
 import Loading from "../../components/loading/Loading";
 import StandardInput from "../../components/standardInput/StandardInput";
 import CheckInput from "../../components/checkInput/CheckInput";
 import Alert from "../../components/alert/Alert";
+import Modal from "../../components/modal/Modal";
 
 import { useState } from "react";
 import { formState, formErrorState, questions } from "./model_questions";
@@ -21,10 +22,14 @@ export default function Model() {
   }>({ text: "", type: "error" });
 
   // Defining fetch result:
-  const [predictionResult, setPredictionResult] = useState<{
-    diabetes: number;
-    no_diabetes: number;
-  } | null>(null);
+  const [predictionResult, setPredictionResult] = useState<
+    | {
+        name: string;
+        value: number;
+        color: string;
+      }[]
+    | null
+  >(null);
 
   function handleOnChangeForm(
     value: string | boolean,
@@ -44,8 +49,6 @@ export default function Model() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    console.log(formError);
 
     if (formError.age || formError.height || formError.weight) {
       setAlert({ text: "Fields must be filled correctly", type: "error" });
@@ -75,10 +78,18 @@ export default function Model() {
       if (!response.ok) throw new Error("Erro na predição");
 
       const data = await response.json();
-      setPredictionResult({
-        diabetes: data.percentage,
-        no_diabetes: 1 - data.percentage,
-      });
+      setPredictionResult([
+        {
+          name: "diabetes",
+          value: data.percentage,
+          color: "#c56715",
+        },
+        {
+          name: "healthy",
+          value: 1 - data.percentage,
+          color: "#1c3148",
+        },
+      ]);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -93,6 +104,18 @@ export default function Model() {
     <>
       {showAlert && <Alert type={alert.type} text={alert.text} />}
       {loading && <Loading />}
+      {predictionResult && (
+        <Modal onClickFunction={() => setPredictionResult(null)}>
+          <DonutChart
+            data={predictionResult}
+            fontsize={24}
+            title="Diabetes probability"
+            color={["#1c3148", "#c56715"]}
+            titleColor="#212529"
+            tooltipBackground="#717a83"
+          />
+        </Modal>
+      )}
       <section id={style.model}>
         <div className={style.model__header}>
           <h2>Submit your answer</h2>
@@ -168,10 +191,7 @@ export default function Model() {
             <CheckInput
               key={key}
               label={question.text}
-              options={[
-                { name: "Yes", value: "true" },
-                { name: "No", value: "false" },
-              ]}
+              options={question.options}
               onClickFunction={(e) =>
                 handleOnChangeForm(e.currentTarget.value, question.target)
               }
@@ -182,12 +202,6 @@ export default function Model() {
             Check
           </button>
         </form>
-        {predictionResult && (
-          <PredictionChart
-            diabetes={predictionResult.diabetes}
-            no_diabetes={predictionResult.no_diabetes}
-          />
-        )}
       </section>
     </>
   );
