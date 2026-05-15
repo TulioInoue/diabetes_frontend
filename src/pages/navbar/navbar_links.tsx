@@ -2,6 +2,12 @@ export const title = "diabetes classification";
 
 export const navlinks = [
   {
+    path: "/about",
+    pathName: "about",
+    icon: "fi fi-ss-terms-info",
+    children: [],
+  },
+  {
     path: "/model",
     pathName: "model",
     icon: "fi fi-ss-robotic-arm",

@@ -8,7 +8,10 @@
 
 .model__header {
   padding: 2rem 0rem;
-  font-size: clamp(6rem, 5vw, 7rem);
+}
+
+.model__header h2 {
+  font-size: clamp(3rem, 5vw, 4rem);
 }
 
 .model__header p {
