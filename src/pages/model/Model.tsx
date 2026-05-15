@@ -1,8 +1,9 @@
 import style from "./Model.module.css";
 
-import RadioInput from "../../components/radioInput/RadioInput";
 import PredictionChart from "../../components/graphs/PredictionChart";
 import Loading from "../../components/loading/Loading";
+import StandardInput from "../../components/standardInput/StandardInput";
+import CheckInput from "../../components/checkInput/CheckInput";
 
 import { useState } from "react";
 
@@ -16,20 +17,18 @@ export default function Model() {
     age: "",
     weight: "",
     height: "",
-    gender: "Male",
-    polyuria: false,
-    polydipsia: false,
-    sudden_weight_loss: false,
-    weakness: false,
-    polyphagia: false,
-    genital_thrush: false,
-    visual_blurring: false,
-    itching: false,
-    irritability: false,
-    delayed_healing: false,
-    partial_paresis: false,
-    muscle_stiffness: false,
-    alopecia: false,
+    polyuria: true,
+    polydipsia: true,
+    sudden_weight_loss: true,
+    weakness: true,
+    polyphagia: true,
+    genital_thrush: true,
+    visual_blurring: true,
+    itching: true,
+    delayed_healing: true,
+    partial_paresis: true,
+    muscle_stiffness: true,
+    alopecia: true,
   });
 
   const questions: { text: string; target: keyof typeof form }[] = [
@@ -64,10 +63,6 @@ export default function Model() {
     {
       text: "Has general skin irritation or itchy sensations?",
       target: "itching",
-    },
-    {
-      text: "Has heightened emotional sensitivity or agitation?",
-      target: "irritability",
     },
     {
       text: "Noticeable slowness in the recovery of wounds or cuts?",
@@ -145,72 +140,64 @@ export default function Model() {
           <h2>Submit your answer</h2>
           <p>
             *This form is for demonstration purposes only and should not be
-            taken seriously. The diagnosis cannot replace the opinion of a
-            medical professional.
+            taken seriously. The diagnosis cannot replace a medical opinion.
           </p>
           <hr />
         </div>
         <form onSubmit={handleSubmit} className={style.form}>
           <div className={style.model__inputs}>
-            <div className={style.model__input}>
-              <label htmlFor="age">Age:</label>
-              <input
-                required
-                type="number"
-                id="age"
-                placeholder="0"
-                onChange={(e) =>
-                  handleOnChangeForm(e.currentTarget.value, "age")
-                }
-              />
-            </div>
-            <div className={style.model__select}>
-              <label htmlFor="gender">Gender:</label>
-              <select
-                name="gender"
-                id="gender"
-                onChange={(e) =>
-                  handleOnChangeForm(e.currentTarget.value, "gender")
-                }
-              >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </div>
-            <div className={style.model__input}>
-              <label htmlFor="height">Height (m):</label>
-              <input
-                required
-                type="number"
-                id="height"
-                step="0.01"
-                placeholder="0.00"
-                onChange={(e) =>
-                  handleOnChangeForm(e.currentTarget.value, "height")
-                }
-              />
-            </div>
-            <div className={style.model__input}>
-              <label htmlFor="height">Weight (kg):</label>
-              <input
-                required
-                type="number"
-                id="weight"
-                step="0.01"
-                placeholder="0.00"
-                onChange={(e) =>
-                  handleOnChangeForm(e.currentTarget.value, "weight")
-                }
-              />
-            </div>
+            <StandardInput
+              icon="fi fi-ss-age-alt"
+              label="Age:"
+              type="number"
+              placeholder="0"
+              onChangeFunction={(e) =>
+                handleOnChangeForm(e.currentTarget.value, "age")
+              }
+              handleError={(e) => {
+                return +e.currentTarget.value < 0
+                  ? "Value should be positive"
+                  : "";
+              }}
+            />
+            <StandardInput
+              icon="fi fi-ss-text-height"
+              label="Height (m):"
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              onChangeFunction={(e) =>
+                handleOnChangeForm(e.currentTarget.value, "height")
+              }
+              handleError={(e) => {
+                return +e.currentTarget.value < 0
+                  ? "Value should be positive"
+                  : "";
+              }}
+            />
+            <StandardInput
+              icon="fi fi-ss-scale"
+              label="Weight (kg):"
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              onChangeFunction={(e) =>
+                handleOnChangeForm(e.currentTarget.value, "weight")
+              }
+              handleError={(e) => {
+                return +e.currentTarget.value < 0
+                  ? "Value should be positive"
+                  : "";
+              }}
+            />
           </div>
           {questions.map((question, key) => (
-            <RadioInput
+            <CheckInput
               key={key}
-              text={question.text}
+              label={question.text}
               options={[
-                { name: "Yes", value: "true", anchor: question.target },
-                { name: "No", value: "false", anchor: question.target },
+                { name: "Yes", value: "true" },
+                { name: "No", value: "false" },
               ]}
               onClickFunction={(e) =>
                 handleOnChangeForm(e.currentTarget.value, question.target)

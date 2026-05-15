@@ -1,0 +1,54 @@
+.standardIncorrectInput,
+.standardInput {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.standardIncorrectInput p,
+.standardInput p {
+  font-size: clamp(2rem, 2vw, 2.5rem);
+  font-weight: 700;
+}
+
+.standardInput__content {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  align-items: center;
+}
+
+.standardIncorrectInput .standardInput__content i {
+  background-color: var(--secondary-color);
+}
+
+.standardInput .standardInput__content i {
+  background-color: var(--primary-color);
+}
+
+.standardIncorrectInput .standardInput__content i,
+.standardInput .standardInput__content i {
+  color: var(--text-light-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 1.25rem;
+}
+
+.standardInput__content input {
+  height: 100%;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1.75rem;
+  outline: none;
+  border: 1px solid var(--text-gray-color);
+}
+
+.standardInput__alert {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 700;
+  color: var(--secondary-color);
+  font-size: 1.75rem;
+}
