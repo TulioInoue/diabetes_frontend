@@ -4,10 +4,21 @@ import PredictionChart from "../../components/graphs/PredictionChart";
 import Loading from "../../components/loading/Loading";
 import StandardInput from "../../components/standardInput/StandardInput";
 import CheckInput from "../../components/checkInput/CheckInput";
+import Alert from "../../components/alert/Alert";
 
 import { useState } from "react";
 
 export default function Model() {
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alert, setAlert] = useState<{
+    type: "success" | "error";
+    text: string;
+  }>({ text: "", type: "error" });
+  const [formError, setFormError] = useState({
+    age: true,
+    weight: true,
+    height: true,
+  });
   const [loading, setLoading] = useState<boolean>();
   const [predictionResult, setPredictionResult] = useState<{
     diabetes: number;
@@ -100,6 +111,16 @@ export default function Model() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    console.log(formError);
+
+    if (formError.age || formError.height || formError.weight) {
+      setAlert({ text: "Fields must be filled correctly", type: "error" });
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 5000);
+      return;
+    }
+
     setLoading(true);
 
     const payload = {
@@ -128,12 +149,16 @@ export default function Model() {
       setLoading(false);
     } catch (error) {
       setLoading(false);
+      setAlert({ text: "An unknow error occurred", type: "error" });
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 5000);
       console.error("Erro ao conectar com a API:", error);
     }
   }
 
   return (
     <>
+      {showAlert && <Alert type={alert.type} text={alert.text} />}
       {loading && <Loading />}
       <section id={style.model}>
         <div className={style.model__header}>
@@ -151,13 +176,18 @@ export default function Model() {
               label="Age:"
               type="number"
               placeholder="0"
-              onChangeFunction={(e) =>
-                handleOnChangeForm(e.currentTarget.value, "age")
-              }
+              onChangeFunction={(e) => {
+                const validation = +e.currentTarget.value < 0;
+                setFormError((current) => {
+                  const newCurrent = { ...current };
+                  newCurrent["age"] = validation;
+                  return newCurrent;
+                });
+                handleOnChangeForm(e.currentTarget.value, "age");
+              }}
               handleError={(e) => {
-                return +e.currentTarget.value < 0
-                  ? "Value should be positive"
-                  : "";
+                const validation = +e.currentTarget.value < 0;
+                return validation ? "Value should be positive" : "";
               }}
             />
             <StandardInput
@@ -166,13 +196,18 @@ export default function Model() {
               type="number"
               step="0.01"
               placeholder="0.00"
-              onChangeFunction={(e) =>
-                handleOnChangeForm(e.currentTarget.value, "height")
-              }
+              onChangeFunction={(e) => {
+                const validation = +e.currentTarget.value < 0;
+                setFormError((current) => {
+                  const newCurrent = { ...current };
+                  newCurrent["height"] = validation;
+                  return newCurrent;
+                });
+                handleOnChangeForm(e.currentTarget.value, "height");
+              }}
               handleError={(e) => {
-                return +e.currentTarget.value < 0
-                  ? "Value should be positive"
-                  : "";
+                const validation = +e.currentTarget.value < 0;
+                return validation ? "Value should be positive" : "";
               }}
             />
             <StandardInput
@@ -181,13 +216,18 @@ export default function Model() {
               type="number"
               step="0.01"
               placeholder="0.00"
-              onChangeFunction={(e) =>
-                handleOnChangeForm(e.currentTarget.value, "weight")
-              }
+              onChangeFunction={(e) => {
+                const validation = +e.currentTarget.value < 0;
+                setFormError((current) => {
+                  const newCurrent = { ...current };
+                  newCurrent["weight"] = validation;
+                  return newCurrent;
+                });
+                handleOnChangeForm(e.currentTarget.value, "weight");
+              }}
               handleError={(e) => {
-                return +e.currentTarget.value < 0
-                  ? "Value should be positive"
-                  : "";
+                const validation = +e.currentTarget.value < 0;
+                return validation ? "Value should be positive" : "";
               }}
             />
           </div>
